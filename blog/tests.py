@@ -44,6 +44,20 @@ class BlogViewsTests(TestCase):
         self.assertContains(response, "Detail post")
         self.assertContains(response, "Detail text")
 
+    def test_post_list_shows_post_image_when_available(self):
+        Post.objects.create(
+            author=self.user,
+            title="Image post",
+            text="Image text",
+            image="images/test.png",
+            published_date=timezone.now(),
+        )
+
+        response = self.client.get(reverse("post_list"))
+
+        self.assertContains(response, 'src="/media/images/test.png"')
+        self.assertContains(response, 'alt="Image post"')
+
     def test_logged_in_user_can_create_post(self):
         self.client.force_login(self.user)
 
